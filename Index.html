@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday Doctor 🎉</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom, #eef6ff, #ffe9f2);
+    }
+
+    /* Floating balloons */
+    .balloon {
+      width: 40px;
+      height: 55px;
+      border-radius: 50% 50% 45% 45%;
+      position: absolute;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+      animation: float 6s ease-in-out infinite;
+    }
+    .balloon:after {
+      content: "";
+      width: 2px;
+      height: 30px;
+      background: #aaa;
+      position: absolute;
+      left: 50%;
+      top: 55px;
+      transform: translateX(-50%);
+    }
+    @keyframes float {
+      0%   { transform: translateY(60px); }
+      50%  { transform: translateY(-80px); }
+      100% { transform: translateY(60px); }
+    }
+
+    /* Floating icons */
+    .floaty {
+      animation: bob 4s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-15px); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6 overflow-hidden">
+
+  <!-- Balloons -->
+  <div class="balloon bg-pink-300 left-10 top-24"></div>
+  <div class="balloon bg-sky-300 left-1/2 top-16" style="animation-delay: .8s"></div>
+  <div class="balloon bg-violet-300 right-12 top-28" style="animation-delay: 1.4s"></div>
+
+  <!-- Card -->
+  <div class="backdrop-blur-xl bg-white/80 border border-white/50 rounded-3xl shadow-xl max-w-xl w-full text-center p-8 space-y-6">
+
+    <h1 class="text-3xl font-bold text-pink-500 flex justify-center gap-2 items-center">
+      <span>🎈</span> Happy Birthday, Doctor! 🎉
+    </h1>
+
+    <!-- Countdown -->
+    <div class="bg-white/70 rounded-2xl p-5 shadow-inner">
+      <p class="text-gray-600 text-sm mb-2">Countdown to the 31st</p>
+
+      <div id="timer" class="grid grid-cols-4 gap-3">
+        <!-- JS fills values -->
+      </div>
+    </div>
+
+    <p class="text-gray-700 leading-relaxed">
+      You heal people every day with your knowledge, kindness, and smile —
+      today is your day to feel just as cared for. Wishing you laughter, love,
+      and magical surprises! 💖
+    </p>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div class="rounded-2xl bg-sky-100 py-4 shadow floaty">🩺<p class="text-sm font-medium mt-1">Doctor Vibes</p></div>
+      <div class="rounded-2xl bg-pink-100 py-4 shadow floaty">❤️<p class="text-sm font-medium mt-1">Lots of Love</p></div>
+      <div class="rounded-2xl bg-emerald-100 py-4 shadow floaty">💉<p class="text-sm font-medium mt-1">Dose of Fun</p></div>
+    </div>
+
+    <button
+      onclick="popConfetti()"
+      class="mt-4 px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow hover:shadow-lg active:scale-95 transition">
+      Celebrate Again 🎊
+    </button>
+
+    <p class="text-sm text-gray-500 mt-3">
+      Made with ❤️ for your birthday on the 31st
+    </p>
+  </div>
+
+  <script>
+    // Confetti once on load
+    confetti({ particleCount: 140, spread: 80, origin: { y: 0.7 } });
+
+    function popConfetti() {
+      confetti({ particleCount: 220, spread: 120, startVelocity: 35, origin: { y: 0.7 } });
+    }
+
+    // Countdown
+    function getTargetDate() {
+      const now = new Date();
+      let target = new Date(now.getFullYear(), now.getMonth(), 31, 0, 0, 0);
+      if (now.getDate() > 31) target = new Date(now.getFullYear(), now.getMonth() + 1, 31, 0, 0, 0);
+      return target;
+    }
+
+    function renderTimer() {
+      const t = getTargetDate() - new Date();
+      const d = Math.floor(t / (1000*60*60*24));
+      const h = Math.floor((t / (1000*60*60)) % 24);
+      const m = Math.floor((t / (1000*60)) % 60);
+      const s = Math.floor((t / 1000) % 60);
+
+      document.getElementById("timer").innerHTML = `
+        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${d}</p><p class="text-xs uppercase">Days</p></div>
+        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${h}</p><p class="text-xs uppercase">Hours</p></div>
+        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${m}</p><p class="text-xs uppercase">Minutes</p></div>
+        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${s}</p><p class="text-xs uppercase">Seconds</p></div>
+      `;
+    }
+
+    renderTimer();
+    setInterval(renderTimer, 1000);
+  </script>
+</body>
+</html>
