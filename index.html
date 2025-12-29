@@ -76,7 +76,7 @@ body{
   <div class="subtitle">Our favourite healer, life-saver & the cutest doctor ✨</div>
 
   <div class="countdown-box">
-    Birthday Countdown: <span id="timer"></span>
+    🎈 Party O’Clock: Jadiyaaa Edition 🎁 <span id="timer"></span>
   </div>
 
   <button class="confetti-btn" onclick="showBirthdayGif()">Tap for Surprise 🎉</button>
@@ -147,8 +147,8 @@ for(let i=0;i<30;i++){
   item.innerText=birthdayItems[Math.floor(Math.random()*birthdayItems.length)];
   document.body.appendChild(item);
   
-  // animate upwards
-  let speed=0.5+Math.random()*1.5;
+  // animate slower upwards
+  let speed=0.2+Math.random()*0.6; // slower speed
   let rotate=Math.random()*360;
   function floatUp(){
     let top=parseFloat(item.style.top);
