@@ -128,9 +128,17 @@ function hidePopup(){document.getElementById("popup").style.visibility="hidden";
 // Auto-show popup after 3s if GIF not shown
 setTimeout(showPopup,3000);
 
-/* show/hide birthday GIF */
+/* show/hide birthday GIF with music on button click */
 function showBirthdayGif(){
-  document.getElementById("music").play();
+  const music = document.getElementById("music");
+  music.currentTime = 0;  // start from beginning
+  const playPromise = music.play();
+  if(playPromise !== undefined){
+    playPromise.catch(error => {
+      console.log("Autoplay prevented, music will start on interaction.");
+    });
+  }
+
   document.getElementById("gift").style.display="block";
   document.getElementById("gift-close").style.display="block";
   document.getElementById("popup").style.visibility="hidden"; // hide popup
