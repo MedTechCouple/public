@@ -21,9 +21,6 @@ body{
 @keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
 .subtitle{margin-top:10px;opacity:0.9;font-size:18px;position:relative;z-index:2;}
 
-/* stethoscope heartbeat line */
-#heartbeatCanvas{position:absolute;top:50px;left:50%;transform:translateX(-50%);width:80%;height:80px;z-index:1;}
-
 /* countdown */
 .countdown-box{margin-top:30px;display:inline-block;padding:14px 22px;border-radius:14px;background:#101a33;box-shadow:0 0 18px rgba(255,255,255,0.08);font-size:17px;}
 
@@ -42,18 +39,30 @@ body{
 .popup-box h2{color:#ff79c6;margin-bottom:12px;}
 .popup-box button{margin-top:14px;padding:8px 18px;border:none;border-radius:10px;background:#00d4ff;color:#002;font-weight:600;cursor:pointer;}
 
-/* hidden gift GIF */
+/* birthday GIF */
 #gift{
   display:none;
   position:fixed;
-  top:50%;
-  left:50%;
+  top:50%;left:50%;
   transform:translate(-50%,-50%);
   z-index:1000;
-  max-width:90%;
-  border-radius:20px;
+  max-width:80%;
+  border-radius:16px;
   box-shadow:0 0 20px rgba(255,255,255,0.6);
   animation: bounce 1.2s infinite;
+}
+#gift-close{
+  display:none;
+  position:fixed;
+  top:18px;right:18px;
+  background:#ff5e5e;
+  color:white;
+  border:none;
+  font-size:18px;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:1100;
 }
 @keyframes bounce{
   0%,100%{transform:translate(-50%, -50%) scale(1);}
@@ -70,7 +79,6 @@ body{
 <body>
 
 <canvas id="fireworks"></canvas>
-<canvas id="heartbeatCanvas"></canvas>
 
 <section class="hero">
   <div class="heartbeat">Happy Birthday, Dr. Shirin ❤️</div>
@@ -80,7 +88,7 @@ body{
     Birthday Countdown: <span id="timer"></span>
   </div>
 
-  <button class="confetti-btn" onclick="startConfetti()">Tap for Surprise 🎉</button>
+  <button class="confetti-btn" onclick="showBirthdayGif()">Tap for Surprise 🎉</button>
 </section>
 
 <!-- popup -->
@@ -92,14 +100,9 @@ body{
   </div>
 </div>
 
-<!-- hidden GIF gift from your GIPHY -->
-<div id="gift">
-  <iframe 
-    src="https://giphy.com/embed/5MV7GPFau0kKCrCSxf" 
-    width="320" height="320" frameBorder="0" 
-    class="giphy-embed" allowFullScreen>
-  </iframe>
-</div>
+<!-- hidden birthday GIF -->
+<img id="gift" src="bday.gif" alt="Happy Birthday Celebration GIF">
+<button id="gift-close" onclick="hideBirthdayGif()">Close ✖</button>
 
 <!-- audio -->
 <audio id="music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d4f7390e0e.mp3?filename=birthday-10884.mp3"></audio>
@@ -110,8 +113,14 @@ function updateCountdown(){
   const target = new Date(new Date().getFullYear(),11,31,0,0,0);
   const now = new Date();
   const diff = target - now;
-  if(diff <= 0){ document.getElementById("timer").innerHTML="IT'S TODAY 🎂"; showPopup(); burstFireworks(); return; }
-  const d=Math.floor(diff/86400000), h=Math.floor((diff/3600000)%24), m=Math.floor((diff/60000)%60), s=Math.floor((diff/1000)%60);
+  if(diff <= 0){
+    document.getElementById("timer").innerHTML="IT'S TODAY 🎂";
+    showPopup();
+    burstFireworks();
+    return;
+  }
+  const d=Math.floor(diff/86400000), h=Math.floor((diff/3600000)%24),
+        m=Math.floor((diff/60000)%60), s=Math.floor((diff/1000)%60);
   document.getElementById("timer").innerHTML=`${d}d : ${h}h : ${m}m : ${s}s`;
 }
 setInterval(updateCountdown,1000); updateCountdown();
@@ -120,6 +129,18 @@ setInterval(updateCountdown,1000); updateCountdown();
 function showPopup(){document.getElementById("popup").style.visibility="visible";}
 function hidePopup(){document.getElementById("popup").style.visibility="hidden";}
 setTimeout(showPopup,3000);
+
+/* show/hide birthday GIF */
+function showBirthdayGif(){
+  document.getElementById("music").play();
+  document.getElementById("gift").style.display="block";
+  document.getElementById("gift-close").style.display="block";
+  startConfetti();
+}
+function hideBirthdayGif(){
+  document.getElementById("gift").style.display="none";
+  document.getElementById("gift-close").style.display="none";
+}
 
 /* balloons */
 for(let i=0;i<12;i++){
@@ -136,22 +157,14 @@ for(let i=0;i<40;i++){
   document.body.appendChild(s);
 }
 
-/* confetti + GIF */
+/* confetti */
 function startConfetti(){
-  document.getElementById("music").play();
-  
-  // show hidden GIF
-  const gift=document.getElementById("gift");
-  gift.style.display="block";
-
   for(let i=0;i<120;i++){
     let conf=document.createElement("div");
-    conf.style.position="fixed"; conf.style.top="-10px"; 
-    conf.style.left=Math.random()*100+"%";
+    conf.style.position="fixed"; conf.style.top="-10px"; conf.style.left=Math.random()*100+"%";
     conf.style.width="6px"; conf.style.height="12px";
     conf.style.background=`hsl(${Math.random()*360},80%,60%)`;
-    conf.style.transform=`rotate(${Math.random()*360}deg)`;
-    conf.style.transition="all 2.5s linear";
+    conf.style.transform=`rotate(${Math.random()*360}deg)`; conf.style.transition="all 2.5s linear";
     document.body.appendChild(conf);
     setTimeout(()=>{conf.style.top="105vh";conf.style.opacity=0;},50);
     setTimeout(()=>conf.remove(),2600);
@@ -160,26 +173,34 @@ function startConfetti(){
 
 /* fireworks */
 const canvas=document.getElementById("fireworks"); const ctx=canvas.getContext("2d");
-let W,H; function resize(){W=canvas.width=innerWidth; H=canvas.height=innerHeight;}
+let W,H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
 resize(); addEventListener("resize",resize);
-let fireworks=[]; function burstFireworks(){for(let i=0;i<8;i++){
-  let parts=[]; for(let j=0;j<30;j++){
-    parts.push({x:W/2,y:H/2,angle:Math.random()*2*Math.PI,speed:Math.random()*4+2,life:80,color:`hsl(${Math.random()*360},90%,60%)`});
-  } fireworks.push(parts); } }
+let fireworks=[]; function burstFireworks(){
+  for(let i=0;i<8;i++){
+    let parts=[];
+    for(let j=0;j<30;j++){
+      parts.push({x:W/2,y:H/2,angle:Math.random()*2*Math.PI,
+                  speed:Math.random()*4+2,life:80,color:`hsl(${Math.random()*360},90%,60%)`});
+    }
+    fireworks.push(parts);
+  }
+}
 burstFireworks();
-function animate(){ctx.clearRect(0,0,W,H); fireworks.forEach((fw,i)=>{fw.forEach(p=>{p.x+=Math.cos(p.angle)*p.speed; p.y+=Math.sin(p.angle)*p.speed; p.life--; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,3,3);}); fireworks[i]=fw.filter(p=>p.life>0);}); requestAnimationFrame(animate);}
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  fireworks.forEach((fw,i)=>{
+    fw.forEach(p=>{
+      p.x+=Math.cos(p.angle)*p.speed;
+      p.y+=Math.sin(p.angle)*p.speed;
+      p.life--;
+      ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,3,3);
+    });
+    fireworks[i]=fw.filter(p=>p.life>0);
+  });
+  requestAnimationFrame(animate);
+}
 animate();
-
-/* heartbeat line animation */
-const hb=document.getElementById("heartbeatCanvas"); const hctx=hb.getContext("2d");
-function hbResize(){hb.width=window.innerWidth; hb.height=100;} hbResize(); addEventListener("resize",hbResize);
-let t=0;
-function drawHB(){hctx.clearRect(0,0,hb.width,hb.height); hctx.strokeStyle="#ff4d6d"; hctx.lineWidth=3; hctx.beginPath();
-for(let x=0;x<hb.width;x++){let y=hb.height/2+Math.sin((x+t)*0.05)*20*hRandom(); hctx.lineTo(x,y);}
-hctx.stroke(); t+=1; requestAnimationFrame(drawHB);}
-function hRandom(){return 0.5+Math.random()*0.5;}
-drawHB();
 </script>
-
 </body>
 </html>
