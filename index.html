@@ -37,6 +37,7 @@ body{
   max-width:80%;
   box-shadow:0 0 20px rgba(255,255,255,0.6);
   animation:bounce 1.2s infinite;
+  display: none; /* hide GIF by default */
 }
 #gift-close{
   position:absolute;
@@ -50,7 +51,7 @@ body{
   height:32px;
   border-radius:50%;
   cursor:pointer;
-  display:none;
+  display:none; /* hide close by default */
   z-index:102;
 }
 @keyframes bounce{
@@ -117,8 +118,14 @@ function updateCountdown(){
 setInterval(updateCountdown,1000); updateCountdown();
 
 /* popup */
-function showPopup(){document.getElementById("popup").style.visibility="visible";}
+function showPopup(){
+  if(document.getElementById("gift").style.display === "none"){
+    document.getElementById("popup").style.visibility="visible";
+  }
+}
 function hidePopup(){document.getElementById("popup").style.visibility="hidden";}
+
+// Auto-show popup after 3s if GIF not shown
 setTimeout(showPopup,3000);
 
 /* show/hide birthday GIF */
@@ -129,6 +136,7 @@ function showBirthdayGif(){
   document.getElementById("popup").style.visibility="hidden"; // hide popup
   startConfetti();
 }
+
 function hideBirthdayGif(){
   document.getElementById("gift").style.display="none";
   document.getElementById("gift-close").style.display="none";
@@ -148,13 +156,13 @@ for(let i=0;i<30;i++){
   document.body.appendChild(item);
   
   // animate slower upwards
-  let speed=0.2+Math.random()*0.6; // slower speed
+  let speed=0.2+Math.random()*0.6;
   let rotate=Math.random()*360;
   function floatUp(){
     let top=parseFloat(item.style.top);
     item.style.top=(top-speed)+"%";
     item.style.transform=`rotate(${rotate}deg)`;
-    if(top<-10){ // reset to bottom
+    if(top<-10){
       item.style.top="110%";
       item.style.left=Math.random()*100+"%";
     }
