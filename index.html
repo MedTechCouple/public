@@ -2,162 +2,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Happy Birthday, Dr. Shirin 🎉</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Dr. Shirin 🎂</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
+body{
+  background: linear-gradient(135deg,#111,#1b1f3b,#0e2f4f);
+  color:white;overflow-x:hidden;min-height:100vh;position:relative;
+}
 
-  <style>
-    body { background: linear-gradient(to bottom, #eef6ff, #ffe9f2); }
-    .balloon{width:40px;height:55px;border-radius:50% 50% 45% 45%;position:absolute;
-      box-shadow:0 10px 15px rgba(0,0,0,.1);animation:float 6s ease-in-out infinite;}
-    .balloon:after{content:"";width:2px;height:30px;background:#aaa;position:absolute;
-      left:50%;top:55px;transform:translateX(-50%);}
-    @keyframes float{0%{transform:translateY(60px)}50%{transform:translateY(-80px)}100%{transform:translateY(60px)}}
-    .floaty{animation:bob 4s ease-in-out infinite}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-    .overlay{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;z-index:50}
-    .hidden{display:none}
-    #fw{position:fixed;inset:0;pointer-events:none;z-index:40}
-  </style>
+/* header */
+.hero{text-align:center;padding:70px 20px 40px;position:relative;}
+.heartbeat{
+  font-size:48px;font-weight:800;color:#ff4d6d;
+  text-shadow:0 0 20px #f50057;animation:pulse 1.5s infinite;position:relative;display:inline-block;
+}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+.subtitle{margin-top:10px;opacity:0.9;font-size:18px;position:relative;z-index:2;}
+
+/* stethoscope heartbeat line */
+#heartbeatCanvas{position:absolute;top:50px;left:50%;transform:translateX(-50%);width:80%;height:80px;z-index:1;}
+
+/* countdown */
+.countdown-box{margin-top:30px;display:inline-block;padding:14px 22px;border-radius:14px;background:#101a33;box-shadow:0 0 18px rgba(255,255,255,0.08);font-size:17px;}
+
+/* balloons */
+.balloon{position:absolute;border-radius:50%;width:32px;height:42px;animation: float 8s linear infinite;box-shadow: inset -6px -8px rgba(0,0,0,.2);}
+.balloon:before{content:"";position:absolute;width:2px;height:60px;background:#fff;left:50%;top:42px;}
+@keyframes float{0%{transform: translateY(100vh) translateX(0);}100%{transform: translateY(-110vh) translateX(20px);}}
+
+/* stars */
+.star{position:absolute;width:4px;height:4px;background:white;border-radius:50%;opacity:0.8;animation: twinkle 3s infinite alternate;}
+@keyframes twinkle{0%{opacity:0.3;}100%{opacity:1;}}
+
+/* popup */
+#popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;visibility:hidden;}
+.popup-box{background:#0f1a35;padding:25px;border-radius:20px;text-align:center;width:90%;max-width:420px;box-shadow:0 0 20px rgba(255,255,255,0.1);}
+.popup-box h2{color:#ff79c6;margin-bottom:12px;}
+.popup-box button{margin-top:14px;padding:8px 18px;border:none;border-radius:10px;background:#00d4ff;color:#002;font-weight:600;cursor:pointer;}
+
+/* hidden gift GIF */
+#gift{
+  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:1000;max-width:90%;border-radius:20px;box-shadow:0 0 20px rgba(255,255,255,0.6);
+  animation: bounce 1.2s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translate(-50%, -50%) scale(1);}
+  50%{transform:translate(-50%, -45%) scale(1.08);}
+}
+
+/* confetti button */
+.confetti-btn{margin:35px auto;display:block;padding:10px 25px;border-radius:12px;border:none;background:#20c997;color:#002;font-weight:700;cursor:pointer;box-shadow:0 0 14px rgba(32,201,151,.4);}
+
+/* fireworks canvas */
+#fireworks{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+</style>
 </head>
+<body>
 
-<body class="min-h-screen flex items-center justify-center p-6 overflow-hidden">
+<canvas id="fireworks"></canvas>
+<canvas id="heartbeatCanvas"></canvas>
 
-  <canvas id="fw"></canvas>
+<section class="hero">
+  <div class="heartbeat">Happy Birthday, Dr. Shirin ❤️</div>
+  <div class="subtitle">Our favourite healer, life-saver & the cutest doctor ✨</div>
 
-  <div class="balloon bg-pink-300 left-10 top-24"></div>
-  <div class="balloon bg-sky-300 left-1/2 top-16" style="animation-delay:.8s"></div>
-  <div class="balloon bg-violet-300 right-12 top-28" style="animation-delay:1.4s"></div>
-
-  <div class="backdrop-blur-xl bg-white/80 border border-white/50 rounded-3xl shadow-xl max-w-xl w-full text-center p-8 space-y-6">
-
-    <h1 class="text-3xl font-bold text-pink-500 flex justify-center gap-2 items-center">
-      🎈 Happy Birthday, <span class="text-rose-500">Dr. Shirin</span>! 🎉
-    </h1>
-
-    <p class="text-gray-500 -mt-2">A doctor with a beautiful heart 💗</p>
-
-    <!-- Personal message -->
-    <p class="text-pink-600 font-semibold">
-      Happy birthday Jadiyaaa 💖
-    </p>
-
-    <!-- Countdown -->
-    <div class="bg-white/70 rounded-2xl p-5 shadow-inner">
-      <p class="text-gray-600 text-sm mb-2">Countdown to 31 December</p>
-      <div id="timer" class="grid grid-cols-4 gap-3"></div>
-    </div>
-
-    <!-- Slideshow -->
-    <div class="relative rounded-2xl overflow-hidden shadow">
-      <img id="slide" class="w-full"
-           src="https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=800" alt="slide" />
-    </div>
-
-    <p class="text-gray-700 leading-relaxed">
-      Dear <strong>Dr. Shirin</strong>, you heal with compassion and kindness.
-      May this year bring joy, peace, and beautiful surprises. ✨
-    </p>
-
-    <div class="grid grid-cols-3 gap-4">
-      <div class="rounded-2xl bg-sky-100 py-4 shadow floaty">🩺<p class="text-sm font-medium mt-1">Healing Hands</p></div>
-      <div class="rounded-2xl bg-pink-100 py-4 shadow floaty">❤️<p class="text-sm font-medium mt-1">Loved Always</p></div>
-      <div class="rounded-2xl bg-emerald-100 py-4 shadow floaty">💉<p class="text-sm font-medium mt-1">Dose of Joy</p></div>
-    </div>
-
-    <div class="flex flex-wrap gap-3 justify-center pt-2">
-      <button onclick="popConfetti()" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow">Celebrate Again 🎊</button>
-      <button onclick="toggleMusic()" class="px-4 py-2 rounded-2xl bg-sky-500 text-white shadow">🎵 Play Music</button>
-      <button onclick="revealNote()" class="px-4 py-2 rounded-2xl bg-amber-500 text-white shadow">💌 Secret Note</button>
-    </div>
-
-    <p class="text-sm text-gray-500 mt-3">
-      Made with ❤️ — for <strong>Dr. Shirin</strong> — birthday on 31 December
-    </p>
+  <div class="countdown-box">
+    Birthday Countdown: <span id="timer"></span>
   </div>
 
-  <!-- Popup -->
-  <div id="popup" class="overlay">
-    <div class="bg-white rounded-3xl p-6 text-center max-w-sm shadow-xl">
-      <h2 class="text-xl font-bold text-pink-600 mb-2">Surprise! 🎉</h2>
-      <p class="text-gray-600 mb-4">
-        This page was created especially for you, Dr. Shirin.  
-        Tap below to begin the celebration!
-      </p>
-      <button onclick="closePopup()" class="px-5 py-2 rounded-2xl bg-pink-500 text-white font-semibold">
-        Start Party 🎈
-      </button>
-    </div>
+  <button class="confetti-btn" onclick="startConfetti()">Tap for Surprise 🎉</button>
+</section>
+
+<!-- popup -->
+<div id="popup">
+  <div class="popup-box">
+    <h2>🎁 Surprise Message</h2>
+    <p>Happy birthday Jadiyaaa — may your life be filled with smiles, healing, and endless love 💖</p>
+    <button onclick="hidePopup()">Aww, thank you!</button>
   </div>
+</div>
 
-  <!-- Music -->
-  <audio id="music"
-    src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d4f7390e0e.mp3?filename=birthday-10884.mp3">
-  </audio>
+<!-- hidden GIF gift -->
+<img id="gift" src="https://media.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif" alt="Dudu Bubu Birthday GIF">
 
-  <script>
-    // Confetti
-    confetti({ particleCount: 140, spread: 80, origin: { y: 0.7 } });
-    function popConfetti(){
-      confetti({ particleCount: 220, spread: 120, startVelocity: 35, origin: { y: 0.7 } });
-    }
+<!-- audio -->
+<audio id="music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d4f7390e0e.mp3?filename=birthday-10884.mp3"></audio>
 
-    // 🎯 Countdown specifically to **31 December**
-    function getTargetDate(){
-      const now = new Date();
-      let target = new Date(now.getFullYear(), 11, 31, 0, 0, 0); // month 11 = December
-      if (now > target) target = new Date(now.getFullYear() + 1, 11, 31, 0, 0, 0);
-      return target;
-    }
+<script>
+/* Countdown 31 Dec */
+function updateCountdown(){
+  const target = new Date(new Date().getFullYear(),11,31,0,0,0);
+  const now = new Date();
+  const diff = target - now;
+  if(diff <= 0){ document.getElementById("timer").innerHTML="IT'S TODAY 🎂"; showPopup(); burstFireworks(); return; }
+  const d=Math.floor(diff/86400000), h=Math.floor((diff/3600000)%24), m=Math.floor((diff/60000)%60), s=Math.floor((diff/1000)%60);
+  document.getElementById("timer").innerHTML=`${d}d : ${h}h : ${m}m : ${s}s`;
+}
+setInterval(updateCountdown,1000); updateCountdown();
 
-    function renderTimer(){
-      const t = getTargetDate() - new Date();
-      const d=Math.floor(t/86400000),
-            h=Math.floor((t/3600000)%24),
-            m=Math.floor((t/60000)%60),
-            s=Math.floor((t/1000)%60);
+/* popup */
+function showPopup(){document.getElementById("popup").style.visibility="visible";}
+function hidePopup(){document.getElementById("popup").style.visibility="hidden";}
+setTimeout(showPopup,3000);
 
-      timer.innerHTML = `
-        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${d}</p><p class="text-xs uppercase">Days</p></div>
-        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${h}</p><p class="text-xs uppercase">Hours</p></div>
-        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${m}</p><p class="text-xs uppercase">Minutes</p></div>
-        <div class="rounded-2xl bg-pink-100 py-3"><p class="text-2xl font-bold text-pink-600">${s}</p><p class="text-xs uppercase">Seconds</p></div>`;
-    }
-    renderTimer(); setInterval(renderTimer,1000);
+/* balloons */
+for(let i=0;i<12;i++){
+  let b=document.createElement("div"); b.className="balloon";
+  b.style.left=Math.random()*100+"%"; b.style.animationDelay=(Math.random()*5)+"s";
+  b.style.background=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(b);
+}
 
-    // Slideshow (replace with real photos later)
-    const pics=[
-      "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=800",
-      "https://images.unsplash.com/photo-1530023367847-a683933f4172?w=800",
-      "https://images.unsplash.com/photo-1511988617509-a57c8a288659?w=800"
-    ];
-    let idx=0; setInterval(()=>{ idx=(idx+1)%pics.length; slide.src=pics[idx]; }, 3500);
+/* stars */
+for(let i=0;i<40;i++){
+  let s=document.createElement("div"); s.className="star";
+  s.style.top=Math.random()*100+"%"; s.style.left=Math.random()*100+"%";
+  s.style.animationDuration=(2+Math.random()*2)+"s";
+  document.body.appendChild(s);
+}
 
-    function closePopup(){ popup.classList.add("hidden"); popConfetti(); }
+/* confetti + GIF */
+function startConfetti(){
+  document.getElementById("music").play();
+  const gift=document.getElementById("gift");
+  gift.style.display="block";
 
-    // Music
-    let playing=false;
-    function toggleMusic(){ playing ? music.pause() : music.play(); playing=!playing; }
+  for(let i=0;i<120;i++){
+    let conf=document.createElement("div");
+    conf.style.position="fixed"; conf.style.top="-10px"; conf.style.left=Math.random()*100+"%";
+    conf.style.width="6px"; conf.style.height="12px"; conf.style.background=`hsl(${Math.random()*360},80%,60%)`;
+    conf.style.transform=`rotate(${Math.random()*360}deg)`; conf.style.transition="all 2.5s linear";
+    document.body.appendChild(conf);
+    setTimeout(()=>{conf.style.top="105vh";conf.style.opacity=0;},50);
+    setTimeout(()=>conf.remove(),2600);
+  }
+}
 
-    // 💌 Secret note including your message
-    function revealNote(){
-      alert("Happy birthday Jadiyaaa 💖\n\nDear Shirin — you make the world brighter just by being in it.");
-      popConfetti();
-    }
+/* fireworks */
+const canvas=document.getElementById("fireworks"); const ctx=canvas.getContext("2d");
+let W,H; function resize(){W=canvas.width=innerWidth; H=canvas.height=innerHeight;}
+resize(); addEventListener("resize",resize);
+let fireworks=[]; function burstFireworks(){for(let i=0;i<8;i++){
+  let parts=[]; for(let j=0;j<30;j++){
+    parts.push({x:W/2,y:H/2,angle:Math.random()*2*Math.PI,speed:Math.random()*4+2,life:80,color:`hsl(${Math.random()*360},90%,60%)`});
+  } fireworks.push(parts); } }
+burstFireworks();
+function animate(){ctx.clearRect(0,0,W,H); fireworks.forEach((fw,i)=>{fw.forEach(p=>{p.x+=Math.cos(p.angle)*p.speed; p.y+=Math.sin(p.angle)*p.speed; p.life--; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,3,3);}); fireworks[i]=fw.filter(p=>p.life>0);}); requestAnimationFrame(animate);}
+animate();
 
-    // Fireworks at midnight
-    setInterval(()=>{
-      const n=new Date();
-      if(n.getHours()===0 && n.getMinutes()===0 && n.getSeconds()<2){
-        for(let i=0;i<25;i++){
-          confetti({startVelocity:45, spread:360, ticks:90, origin:{x:Math.random(), y:Math.random()*0.3}});
-        }
-      }
-    },1000);
-  </script>
+/* heartbeat line animation */
+const hb=document.getElementById("heartbeatCanvas"); const hctx=hb.getContext("2d");
+function hbResize(){hb.width=window.innerWidth; hb.height=100;} hbResize(); addEventListener("resize",hbResize);
+let t=0;
+function drawHB(){hctx.clearRect(0,0,hb.width,hb.height); hctx.strokeStyle="#ff4d6d"; hctx.lineWidth=3; hctx.beginPath();
+for(let x=0;x<hb.width;x++){let y=hb.height/2+Math.sin((x+t)*0.05)*20*hRandom(); hctx.lineTo(x,y);}
+hctx.stroke(); t+=1; requestAnimationFrame(drawHB);}
+function hRandom(){return 0.5+Math.random()*0.5;}
+drawHB();
+</script>
 
 </body>
 </html>
